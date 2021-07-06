@@ -1,0 +1,20 @@
+#!/bin/bash
+#Install the maven /opt
+#download the zip
+wget https://mirrors.estointernet.in/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip
+#extract 
+unzip apache-maven-3.8.1-bin.zip
+#rename
+mv apache-maven-3.8.1 maven38
+#change the permissions
+chmod -R 700 maven38
+#delte the zip
+rm -f apache-maven-3.8.1-bin.zip
+#Bring the code from Github to jenkins - /opt
+git clone https://github.com/spring-petclinic/spring-framework-petclinic.git
+#Build the war
+/opt/maven38/bin/mvn clean package -P MySQL
+#Scp the pem file from jenkins to the tomcat (Pre: we need to have pem in the jenkins(/tmp))
+Scp -i /tmp/project1.pem petclinic.war ec2-user@tomcatPrivateIP:/tmp
+#Inside the tomcat copy the war file from /tmp to the /opt/tomcat/webapps
+cp –f source_file target_file
